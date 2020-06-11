@@ -16,7 +16,7 @@ import {
 	BlockIcon,
 	MediaPlaceholder,
 	MediaReplaceFlow,
-	__experimentalBlock as Block,
+	__experimentalUseBlockProps as useBlockProps,
 } from '@wordpress/block-editor';
 import { useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -275,7 +275,7 @@ export function ImageEdit( {
 	return (
 		<>
 			{ controls }
-			<Block.figure ref={ ref } className={ classes } key={ key }>
+			<figure { ...useBlockProps( { key, ref, className: classes } ) }>
 				{ url && (
 					<Image
 						attributes={ attributes }
@@ -287,7 +287,7 @@ export function ImageEdit( {
 					/>
 				) }
 				{ mediaPlaceholder }
-			</Block.figure>
+			</figure>
 		</>
 	);
 }

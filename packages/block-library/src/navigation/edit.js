@@ -15,7 +15,7 @@ import {
 	FontSizePicker,
 	withFontSizes,
 	__experimentalUseColors,
-	__experimentalBlock as Block,
+	__experimentalUseBlockProps as useBlockProps,
 } from '@wordpress/block-editor';
 
 import { createBlock } from '@wordpress/blocks';
@@ -89,6 +89,7 @@ function Navigation( {
 		selectedCreateActionOption,
 		setSelectedCreateActionOption,
 	] = useState( null );
+	const blockProps = useBlockProps( { ref } );
 	const { selectBlock } = useDispatch( 'core/block-editor' );
 	const { TextColor, BackgroundColor, ColorPanel } = __experimentalUseColors(
 		[
@@ -339,7 +340,7 @@ function Navigation( {
 	// If we don't have existing items then show the Placeholder
 	if ( ! hasExistingNavItems ) {
 		return (
-			<Block.div>
+			<div { ...blockProps }>
 				<Placeholder
 					className="wp-block-navigation-placeholder"
 					icon={ icon }
@@ -405,7 +406,7 @@ function Navigation( {
 						</div>
 					) }
 				</Placeholder>
-			</Block.div>
+			</div>
 		);
 	}
 
@@ -490,9 +491,13 @@ function Navigation( {
 			</InspectorControls>
 			<TextColor>
 				<BackgroundColor>
-					<Block.nav
-						className={ blockClassNames }
-						style={ blockInlineStyles }
+					<nav
+						{ ...blockProps }
+						className={ classnames(
+							blockProps.className,
+							blockClassNames
+						) }
+						style={ { ...blockProps.style, ...blockInlineStyles } }
 					>
 						{ ! hasExistingNavItems && isRequestingEntities && (
 							<LoadingSpinner />
@@ -522,7 +527,7 @@ function Navigation( {
 							// inherit templateLock={ 'all' }.
 							templateLock={ false }
 						/>
-					</Block.nav>
+					</nav>
 				</BackgroundColor>
 			</TextColor>
 		</>
