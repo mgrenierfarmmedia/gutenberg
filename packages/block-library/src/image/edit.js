@@ -268,14 +268,10 @@ export function ImageEdit( {
 		[ `size-${ sizeSlug }` ]: sizeSlug,
 	} );
 
-	// Focussing the image caption after inserting an image relies on the
-	// component remounting. This needs to be fixed.
-	const key = !! url;
-
 	return (
 		<>
 			{ controls }
-			<figure { ...useBlockProps( { key, ref, className: classes } ) }>
+			<figure { ...useBlockProps( { ref, className: classes } ) }>
 				{ url && (
 					<Image
 						attributes={ attributes }

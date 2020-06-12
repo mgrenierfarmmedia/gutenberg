@@ -26,7 +26,7 @@ import {
 	__experimentalImageSizeControl as ImageSizeControl,
 	__experimentalImageURLInputUI as ImageURLInputUI,
 } from '@wordpress/block-editor';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { getPath } from '@wordpress/url';
 import { createBlock } from '@wordpress/blocks';
@@ -73,6 +73,7 @@ export default function Image( {
 	onReplace,
 	containerRef,
 } ) {
+	const captionRef = useRef();
 	const image = useSelect(
 		( select ) => {
 			const { getMedia } = select( 'core' );
@@ -113,6 +114,12 @@ export default function Image( {
 			setCaptionFocused( false );
 		}
 	}, [ isSelected ] );
+
+	useEffect( () => {
+		if ( url && isSelected ) {
+			captionRef.current.focus();
+		}
+	}, [ url ] );
 
 	function onResizeStart() {
 		toggleSelection( false );
@@ -398,6 +405,7 @@ export default function Image( {
 			{ img }
 			{ ( ! RichText.isEmpty( caption ) || isSelected ) && (
 				<RichText
+					ref={ captionRef }
 					tagName="figcaption"
 					placeholder={ __( 'Write caption…' ) }
 					value={ caption }
