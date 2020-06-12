@@ -155,7 +155,9 @@ function NavigationLinkEdit( {
 						shortcut={ displayShortcut.primary( 'k' ) }
 						onClick={ () => setIsLinkOpen( true ) }
 					>
-						{ displayUrl }
+						<span className="navigation-link-edit-link-label">
+							{ displayUrl }
+						</span>
 					</ToolbarButton>
 				</ToolbarGroup>
 				<ToolbarGroup>
