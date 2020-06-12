@@ -150,7 +150,7 @@ function NavigationLinkEdit( {
 					/>
 					<ToolbarButton
 						name="link"
-						icon={ linkIcon }
+						icon={ displayUrl ? null : linkIcon }
 						title={ __( 'Link' ) }
 						shortcut={ displayShortcut.primary( 'k' ) }
 						onClick={ () => setIsLinkOpen( true ) }
