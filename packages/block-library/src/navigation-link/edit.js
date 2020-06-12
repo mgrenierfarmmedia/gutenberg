@@ -154,6 +154,7 @@ function NavigationLinkEdit( {
 						title={ __( 'Link' ) }
 						shortcut={ displayShortcut.primary( 'k' ) }
 						onClick={ () => setIsLinkOpen( true ) }
+						className="navigation-link-edit-link-button"
 					>
 						<span className="navigation-link-edit-link-label">
 							{ displayUrl }

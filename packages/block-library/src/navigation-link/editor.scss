@@ -8,17 +8,24 @@
 }
 
 // Truncate long URLs in the toolbar
-.block-editor-block-toolbar .navigation-link-edit-link-label {
-	display: inline-block;
-	max-width: 230px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.block-editor-block-toolbar .navigation-link-edit-link-button {
+	&,
+	&.components-button.components-button.has-icon svg {
+		margin-right: 0;
+	}
+
+	.navigation-link-edit-link-label {
+		display: inline-block;
+		max-width: 230px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }
 
 /**
- * Adjust Navigation Item.
- */
+* Adjust Navigation Item.
+*/
 .wp-block-navigation-link {
 	.block-editor-block-list__layout {
 		display: block;
