@@ -74,6 +74,7 @@ export default function Image( {
 	containerRef,
 } ) {
 	const captionRef = useRef();
+	const prevUrl = useRef();
 	const image = useSelect(
 		( select ) => {
 			const { getMedia } = select( 'core' );
@@ -115,10 +116,16 @@ export default function Image( {
 		}
 	}, [ isSelected ] );
 
+	// Focus the caption after inserting an image from the placeholder. This is
+	// done to preserve the behaviour of focussing the first tabbable element
+	// when a block is mounted. Previously, the image block would remount when
+	// the placeholder is removed. Maybe this behaviour could be removed.
 	useEffect( () => {
-		if ( url && isSelected ) {
+		if ( url && isSelected && ! prevUrl.current ) {
 			captionRef.current.focus();
 		}
+
+		prevUrl.current = url;
 	}, [ url ] );
 
 	function onResizeStart() {
