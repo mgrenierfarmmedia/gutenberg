@@ -15,7 +15,7 @@ import {
 	forwardRef,
 } from '@wordpress/element';
 import { focus, isTextField, placeCaretAtHorizontalEdge } from '@wordpress/dom';
-import { BACKSPACE, DELETE, ENTER } from '@wordpress/keycodes';
+import { ENTER } from '@wordpress/keycodes';
 import { __, sprintf } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
 
@@ -80,9 +80,7 @@ export function useBlockProps( props = {}, { __unstableIsHtml } = {} ) {
 		},
 		[ isSelected ]
 	);
-	const { removeBlock, insertDefaultBlock } = useDispatch(
-		'core/block-editor'
-	);
+	const { insertDefaultBlock } = useDispatch( 'core/block-editor' );
 	const [ isHovered, setHovered ] = useState( false );
 
 	// Provide the selected node, or the first and last nodes of a multi-
@@ -158,22 +156,23 @@ export function useBlockProps( props = {}, { __unstableIsHtml } = {} ) {
 	);
 
 	useEffect( () => {
+		if ( ! isSelected || isLocked ) {
+			return;
+		}
+
 		/**
-		 * Interprets keydown event intent to remove or insert after block if key
-		 * event occurs on wrapper node. This can occur when the block has no text
-		 * fields of its own, particularly after initial insertion, to allow for
-		 * easy deletion and continuous writing flow to add additional content.
+		 * Interprets keydown event intent to remove or insert after block if
+		 * key event occurs on wrapper node. This can occur when the block has
+		 * no text fields of its own, particularly after initial insertion, to
+		 * allow for easy deletion and continuous writing flow to add additional
+		 * content.
 		 *
 		 * @param {KeyboardEvent} event Keydown event.
 		 */
 		function onKeyDown( event ) {
 			const { keyCode, target } = event;
 
-			if (
-				keyCode !== ENTER &&
-				keyCode !== BACKSPACE &&
-				keyCode !== DELETE
-			) {
+			if ( keyCode !== ENTER ) {
 				return;
 			}
 
@@ -183,11 +182,19 @@ export function useBlockProps( props = {}, { __unstableIsHtml } = {} ) {
 
 			event.preventDefault();
 
-			if ( keyCode === ENTER ) {
-				insertDefaultBlock( {}, rootClientId, index + 1 );
-			} else {
-				removeBlock( clientId );
-			}
+			insertDefaultBlock( {}, rootClientId, index + 1 );
+		}
+
+		ref.current.addEventListener( 'keydown', onKeyDown );
+
+		return () => {
+			ref.current.removeEventListener( 'keydown', onKeyDown );
+		};
+	}, [ isSelected, isLocked, insertDefaultBlock ] );
+
+	useEffect( () => {
+		if ( ! isSelected ) {
+			return;
 		}
 
 		function onMouseLeave( { which, buttons } ) {
@@ -201,32 +208,12 @@ export function useBlockProps( props = {}, { __unstableIsHtml } = {} ) {
 			}
 		}
 
-		if ( isSelected ) {
-			// Only allow shortcuts when a blocks is selected and not locked.
-			if ( ! isLocked ) {
-				ref.current.addEventListener( 'keydown', onKeyDown );
-			}
-
-			// Only allow selection to be started from a selected block.
-			ref.current.addEventListener( 'mouseleave', onMouseLeave );
-		}
+		ref.current.addEventListener( 'mouseleave', onMouseLeave );
 
 		return () => {
-			if ( isSelected ) {
-				if ( ! isLocked ) {
-					ref.current.removeEventListener( 'keydown', onKeyDown );
-				}
-
-				ref.current.removeEventListener( 'mouseleave', onMouseLeave );
-			}
+			ref.current.removeEventListener( 'mouseleave', onMouseLeave );
 		};
-	}, [
-		isSelected,
-		isLocked,
-		insertDefaultBlock,
-		removeBlock,
-		onSelectionStart,
-	] );
+	}, [ isSelected, onSelectionStart ] );
 
 	useEffect( () => {
 		if ( ! isNavigationMode ) {
