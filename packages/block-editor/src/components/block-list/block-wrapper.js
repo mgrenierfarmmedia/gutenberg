@@ -284,7 +284,6 @@ export function useBlockProps( props = {}, { __unstableIsHtml } = {} ) {
 		'data-type': name,
 		'data-title': blockTitle,
 		className: classnames(
-			'wp-block',
 			className,
 			props.className,
 			wrapperProps.className,
