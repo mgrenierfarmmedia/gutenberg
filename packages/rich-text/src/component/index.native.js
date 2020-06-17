@@ -784,6 +784,7 @@ export class RichText extends Component {
 						text: html,
 						eventCount: this.lastEventCount,
 						selection,
+						linkTextColor: defaultTextDecorationColor,
 					} }
 					placeholder={ this.props.placeholder }
 					placeholderTextColor={
@@ -809,7 +810,6 @@ export class RichText extends Component {
 						( parentBlockStyles && parentBlockStyles.color ) ||
 						defaultColor
 					}
-					linkTextColor={ defaultTextDecorationColor }
 					maxImagesWidth={ 200 }
 					fontFamily={ this.props.fontFamily || defaultFontFamily }
 					fontSize={
@@ -837,34 +837,29 @@ export class RichText extends Component {
 							onFocus={ () => {} }
 						/>
 						<BlockFormatControls>
-							{
-								// eslint-disable-next-line no-undef
-								__DEV__ && isMentionsSupported( capabilities ) && (
-									<Toolbar>
-										<ToolbarButton
-											title={ __( 'Insert mention' ) }
-											icon={ <Icon icon={ atSymbol } /> }
-											onClick={ () => {
-												addMention()
-													.then(
-														( mentionUserId ) => {
-															let stringToInsert = `@${ mentionUserId }`;
-															if ( this.isIOS ) {
-																stringToInsert +=
-																	' ';
-															}
-															this.insertString(
-																record,
-																stringToInsert
-															);
-														}
-													)
-													.catch( () => {} );
-											} }
-										/>
-									</Toolbar>
-								)
-							}
+							{ // eslint-disable-next-line no-undef
+							__DEV__ && isMentionsSupported( capabilities ) && (
+								<Toolbar>
+									<ToolbarButton
+										title={ __( 'Insert mention' ) }
+										icon={ <Icon icon={ atSymbol } /> }
+										onClick={ () => {
+											addMention()
+												.then( ( mentionUserId ) => {
+													let stringToInsert = `@${ mentionUserId }`;
+													if ( this.isIOS ) {
+														stringToInsert += ' ';
+													}
+													this.insertString(
+														record,
+														stringToInsert
+													);
+												} )
+												.catch( () => {} );
+										} }
+									/>
+								</Toolbar>
+							) }
 						</BlockFormatControls>
 					</>
 				) }
